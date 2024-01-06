@@ -1,5 +1,10 @@
 package com.cisco;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -17,8 +22,23 @@ public class empdao {
 		s.close();
 		
 	}
-	public static void main(String[] args) {
+	public void saveDataWithJDBC() {
+        String url = "jdbc:mysql://localhost:3306/jdbchibernate";
+        String username = "root";
+        String password = "root";
+        String sql = "INSERT INTO employee (eid, ename, esal, edesg) VALUES (2, 'Rabba Navaneeth', 879.90, 'Angular Developer')";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             Statement statement = connection.createStatement()) {
+
+            int rowsInserted = statement.executeUpdate(sql);
+            System.out.println("No of Rows Inserted in Database using JDBC ---> " + rowsInserted);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		empdao ed = new empdao();
-		ed.savedata(new employee(101, "Janaki", 987.90, "Java-Developer"));
+		ed.saveDataWithJDBC();
 	}
 }
